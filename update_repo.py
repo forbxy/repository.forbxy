@@ -6,33 +6,25 @@ import re
 import shutil
 import subprocess
 
-# Map github release asset names to kodi platform strings
-PLATFORM_MAPPING = {
-    'android-arm64-v8a': 'android-aarch64',
-    'android-armeabi-v7a': 'android-armv7',
-    'linux-arm32': 'linux-armv7',
-    'linux-arm64': 'linux-aarch64',
-    'linux-x64': 'linux-x86_64',
-    'linux-x86': 'linux-i686',
-    'windows-x64': 'windows-x86_64',
-    'windows-x86': 'windows-i686',
-    'osx-x86_64': 'osx-x86_64',
-    'osx-arm64': 'osx-arm64',
-    'ios-arm64': 'ios-arm64'
-}
-
-STANDARD_PLATFORMS = list(PLATFORM_MAPPING.values())
+STANDARD_PLATFORMS = [
+    'android-aarch64',
+    'android-armv7',
+    'linux-aarch64',
+    'linux-armv7',
+    'linux-i686',
+    'linux-x86_64',
+    'windows-i686',
+    'windows-x86_64',
+    'osx-x86_64',
+    'osx-arm64',
+    'ios-arm64'
+]
 
 def get_platform_from_filename(filename):
     """
     Extracts platform string from filename based on known patterns.
     Returns 'all' for generic python addons or the specific kodi platform string.
     """
-    # Check for platform specific binary addons
-    for pattern, platform in PLATFORM_MAPPING.items():
-        if pattern in filename:
-            return platform
-            
     # Check if filename already contains standard platform string
     for platform in STANDARD_PLATFORMS:
          if platform in filename:
@@ -40,6 +32,7 @@ def get_platform_from_filename(filename):
 
     # Default to generic python addon
     return 'all'
+
 
 def download_release(repo_url):
     try:
