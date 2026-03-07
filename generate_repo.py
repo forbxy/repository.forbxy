@@ -239,8 +239,15 @@ def generate_repo():
                                     # Override/Add platform
                                     # Remove existing platform tag if any
                                     inner_content = re.sub(r'<platform>.*?</platform>', '', inner_content)
-                                    # Add new platform tag
-                                    inner_content += f'\n            <platform>{platform_str}</platform>'
+                                    
+                                    # 兼容性处理：CoreELEC 32-bit S922X (ARMv8 核心) 等设备经常无法匹配 linux-armv7
+                                    # 我们向后兼容，额外添加 "linux" 标签，或者放宽验证。由于 kodi 的 <platform> 支持空格分割的多个值
+                                    # 为避免冲突，我们把相关的 ARM 标识都加上
+                                    if platform_str == "linux-armv7":
+                                        inner_content += f'\n            <platform>{platform_str} linux-aarch32 armv7</platform>'
+                                    else:
+                                        inner_content += f'\n            <platform>{platform_str}</platform>'
+                                        
                                     # Add path tag
                                     # Note: path should be relative to datadir. 
                                     # datadir is repo/master/. 
