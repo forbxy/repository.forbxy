@@ -1,0 +1,7 @@
+https://github.com/forbxy/plugin.video.filteredmovies
+https://github.com/forbxy/vfs.stream.fast
+https://github.com/forbxy/plugin.video.emby.vfs
+https://github.com/forbxy/plugin.cloudstorage.webdav.refresh
+https://github.com/forbxy/skin.cpm.estuary.search
+https://github.com/forbxy/metadata.tmdb.cn.optimization
+https://github.com/forbxy/metadata.tvshows.tmdb.cn.optimization
