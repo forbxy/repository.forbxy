@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+<addon id="plugin.video.filteredmovies"
+       name="Filtered Movies"
+       version="1.2.2"
+       provider-name="forbxy">
+
+    <requires>
+        <import addon="xbmc.python" version="3.0.0" />
+    </requires>
+
+    <!-- 注册 default.py 为脚本模块，以便 RunScript 调用 -->
+    <extension point="xbmc.python.script" library="default.py">
+        <provides>executable</provides>
+    </extension>
+
+    <!-- 注册后台服务，用于自动跳过片头 -->
+    <extension point="xbmc.service" library="service.py" />
+
+    <!-- 上下文菜单项 -->
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="default_context_menu_hook.py">
+                <label>设置全局背景</label>
+                <visible>!String.IsEmpty(ListItem.Art(fanart))</visible>
+            </item>
+        </menu>
+    </extension>
+
+    <!-- 元数据 -->
+    <extension point="xbmc.addon.metadata">
+        <summary>Movies list with UI filters</summary>
+        <description>Provide filtered movie list to custom skin view</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>resources/filter.jpg</fanart>
+            <screenshot>resources/filter.jpg</screenshot>
+        </assets>
+    </extension>
+
+</addon>
+<addon id="plugin.service.emby-next-gen" name="Emby for Kodi Next Gen(VFS适配)" version="12.4.15.3" provider-name="quickmic+forbxy">
+    <requires>
+        <import addon="xbmc.python" version="3.0.1"/>
+    </requires>
+    <extension point="xbmc.service" library="service.py" />
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="service.py" args="record">
+                <label>33490</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyRecording),True) + String.StartsWith(ListItem.Path,"pvr://guide/") + !String.IsEmpty(ListItem.EPGEventIcon)]</visible>
+            </item>
+            <item library="service.py" args="specials">
+                <label>33485</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbySpecials),True) + [String.Contains(ListItem.Path,"-s-") | String.Contains(ListItem.Path,"-ms-")]]</visible>
+            </item>
+            <item library="service.py" args="multiversion">
+                <label>33748</label>
+                <visible>[String.Contains(ListItem.Path,"/e-") | String.Contains(ListItem.Path,"/musicvideos/")] + [String.Contains(ListItem.Path,"-m-") | String.Contains(ListItem.Path,"-ms-")]</visible>
+            </item>
+            <menu>
+                <label>33669</label>
+                <item library="service.py" args="gotoshow">
+                    <label>33670</label>
+                    <visible>[String.IsEqual(Window(10000).Property(EmbyGoto),True) + String.IsEqual(ListItem.DBTYPE,"episode")]</visible>
+                </item>
+                <item library="service.py" args="gotoseason">
+                    <label>33671</label>
+                    <visible>[String.IsEqual(Window(10000).Property(EmbyGoto),True) + String.IsEqual(ListItem.DBTYPE,"episode")]</visible>
+                </item>
+                <item library="service.py" args="gotoalbum">
+                    <label>33764</label>
+                    <visible>[String.IsEqual(Window(10000).Property(EmbyGoto),True) + String.IsEqual(ListItem.DBTYPE,"song")]</visible>
+                </item>
+                <item library="service.py" args="gotoartist">
+                    <label>33765</label>
+                    <visible>[String.IsEqual(Window(10000).Property(EmbyGoto),True) + String.IsEqual(ListItem.DBTYPE,"song")]</visible>
+                </item>
+            </menu>
+            <item library="service.py" args="similarshow">
+                <label>33788</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbySimilar),True) + String.IsEqual(ListItem.DBTYPE,"tvshow")]</visible>
+            </item>
+            <item library="service.py" args="similarartist">
+                <label>33788</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbySimilar),True) + String.IsEqual(ListItem.DBTYPE,"artist")]</visible>
+            </item>
+            <item library="service.py" args="similaralbum">
+                <label>33788</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbySimilar),True) + String.IsEqual(ListItem.DBTYPE,"album")]</visible>
+            </item>
+            <item library="service.py" args="similarmovie">
+                <label>33788</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbySimilar),True) + String.IsEqual(ListItem.DBTYPE,"movie")]</visible>
+            </item>
+            <item library="service.py" args="similarmusicvideo">
+                <label>33788</label>
+                <visible>[[String.IsEqual(Window(10000).Property(EmbySimilar),True) + String.IsEqual(ListItem.DBTYPE,"musicvideo")] + !String.IsEmpty(ListItem.DBID)]</visible>
+            </item>
+            <item library="service.py" args="download">
+                <label>33570</label>
+                <visible>String.IsEqual(Window(10000).Property(EmbyDownload),True) + [[String.Contains(ListItem.Path,"/v-") | String.Contains(ListItem.Path,"/e-") | String.Contains(ListItem.Path,"/m-") | String.Contains(ListItem.Path,"/M-") | [[[String.IsEqual(ListItem.DBTYPE,"tvshow") | String.IsEqual(ListItem.DBTYPE,"season")] + !String.EndsWith(ListItem.Label," (download)")] + [String.Contains(ListItem.Path,"/emby_addon_mode/") | String.Contains(ListItem.Path,"dav://127.0.0.1:57342/") | String.Contains(ListItem.Path,"http://127.0.0.1:57342/")]]] + !String.Contains(ListItem.Path,"/EMBY-offline-content/") + !String.Contains(ListItem.Path,"/dynamic/") + !String.IsEmpty(ListItem.DBID)]</visible>
+            </item>
+            <item library="service.py" args="deletedownload">
+                <label>33571</label>
+                <visible>String.IsEqual(Window(10000).Property(EmbyDownload),True) + [String.Contains(ListItem.Path,"/EMBY-offline-content/") | [[String.IsEqual(ListItem.DBTYPE,"tvshow") | String.IsEqual(ListItem.DBTYPE,"season")] + String.EndsWith(ListItem.Label," (download)")]]</visible>
+            </item>
+            <item library="service.py" args="favorites">
+                <label>33547</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyFavourite),True) + !String.StartsWith(ListItem.FolderPath,"library://") + !String.StartsWith(ListItem.FolderPath,"addons://") + !String.StartsWith(ListItem.FolderPath,"plugin://") + !String.StartsWith(ListItem.FolderPath,"favourites:") + !String.StartsWith(ListItem.Path,"pvr://")]</visible>
+            </item>
+            <item library="service.py" args="watchtogether">
+                <label>33548</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyRemote),True) + !String.StartsWith(ListItem.FolderPath,"library://") + !String.StartsWith(ListItem.FolderPath,"addons://") + !String.StartsWith(ListItem.FolderPath,"favourites:") + !String.IsEmpty(ListItem.Filename) + !String.IsEqual(ListItem.FileExtension,"m3u") + !String.StartsWith(ListItem.Path,"pvr://")]</visible>
+            </item>
+            <item library="service.py" args="remoteplay">
+                <label>33652</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyRemote),True) + !String.StartsWith(ListItem.FolderPath,"library://") + !String.StartsWith(ListItem.FolderPath,"addons://") + !String.StartsWith(ListItem.FolderPath,"favourites:") + !String.IsEmpty(ListItem.Filename) + !String.IsEqual(ListItem.FileExtension,"m3u") + !String.StartsWith(ListItem.Path,"pvr://")]</visible>
+            </item>
+            <item library="service.py" args="addremoteclient">
+                <label>33519</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyRemote),True) + !String.StartsWith(ListItem.FolderPath,"library://") + !String.StartsWith(ListItem.FolderPath,"addons://") + !String.StartsWith(ListItem.FolderPath,"plugin://")]</visible>
+            </item>
+            <item library="service.py" args="removeremoteclient">
+                <label>33518</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyRemote),True) + String.IsEqual(Window(10000).Property(EmbyRemoteclient),True)]</visible>
+            </item>
+            <item library="service.py" args="refreshitem">
+                <label>30410</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyRefresh),True) + !String.StartsWith(ListItem.FolderPath,"addons://") + !String.StartsWith(ListItem.FolderPath,"plugin://") + !String.StartsWith(ListItem.FolderPath,"favourites:") + !String.IsEqual(ListItem.FileExtension,"m3u") + !String.StartsWith(ListItem.Path,"pvr://")] + [!String.IsEmpty(ListItem.Filename) | [String.IsEqual(ListItem.DBTYPE,"tvshow") | String.IsEqual(ListItem.DBTYPE,"season")]]</visible>
+            </item>
+            <item library="service.py" args="deleteitem">
+                <label>30409</label>
+                <visible>[!String.StartsWith(ListItem.FolderPath,"library://") + !String.StartsWith(ListItem.FolderPath,"addons://") + !String.StartsWith(ListItem.FolderPath,"plugin://") + String.IsEqual(Window(10000).Property(EmbyDelete),True)]</visible>
+            </item>
+            <item library="service.py" args="settings">
+                <label>33675</label>
+                <visible>String.IsEqual(Window(10000).Property(EmbySettings),True)</visible>
+            </item>
+            <item library="service.py" args="playrandom">
+                <label>33797</label>
+                <visible>[String.IsEqual(Window(10000).Property(EmbyPlayRandom),True) + [String.IsEqual(ListItem.DBTYPE,"musicvideo") | String.IsEqual(ListItem.DBTYPE,"episode") | String.IsEqual(ListItem.DBTYPE,"movie") | String.IsEqual(ListItem.DBTYPE,"tvshow") | String.IsEqual(ListItem.DBTYPE,"season")]]</visible>
+            </item>
+        </menu>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <reuselanguageinvoker>false</reuselanguageinvoker>
+        <platform>all</platform>
+        <language>en</language>
+        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+        <forum>https://emby.media/community/index.php?/forum/99-kodi/</forum>
+        <website>https://emby.media/</website>
+        <source>https://github.com/MediaBrowser/plugin.video.emby</source>
+        <description lang="en">Welcome to Emby for Kodi A whole new way to manage and view your media library. The Emby addon for Kodi combines the best of Kodi - ultra smooth navigation, beautiful UIs and playback of any file under the sun, and Emby - the most powerful fully open source multi-client media metadata indexer and server.
+
+Emby for Kodi is the absolute best way to enjoy the incredible Kodi playback engine combined with the power of Emby&#39;s centralized database. Features: Direct integration with the Kodi library for native Kodi speed Instant synchronization with the Emby server Full support for Movie, TV and Music collections Emby Server direct stream and transcoding support - use Kodi when you are away from home!</description>
+        <description lang="es">Bienvenido a Emby para Kodi una forma completamente nueva de gestionar y ver su biblioteca multimedia. El complemento Emby para Kodi combina lo mejor de Kodi - navegaci&#243;n ultra suave, interfaces hermosas de usuario y la reproducci&#243;n de cualquier archivo bajo el sol, y Emby - el indexador y servidor de metadatos multimedia multicliente de c&#243;digo abierto m&#225;s potente.
+
+Emby para Kodi es la mejor manera de disfrutar del incre&#237;ble motor de reproducci&#243;n de Kodi combinado con el poder de la base de datos centralizada de Emby. Caracter&#237;sticas: Integraci&#243;n directa con la biblioteca de Kodi para una velocidad nativa de sincronizaci&#243;n instant&#225;nea con el soporte completo del Servidor Emby para colecciones de pel&#237;culas, programas de TV y m&#250;sica. Emby Server soporta transcodificaci&#243;n y transmisi&#243;n en directo - &#161;Usa Kodi cuando est&#233;s fuera de casa!</description>
+        <description lang="cz">V&#237;tejte v Emby pro Kodi Zcela nov&#253; zp&#367;sob spr&#225;vy a zobrazen&#237; va&#353;&#237; knihovny m&#233;di&#237;. Dopln&#283;k Emby pro Kodi kombinuje to nejlep&#353;&#237; z Kodi &#8211; ultra plynulou navigaci, kr&#225;sn&#225; u&#382;ivatelsk&#225; rozhran&#237; a p&#345;ehr&#225;v&#225;n&#237; jak&#233;hokoli souboru pod sluncem a Emby &#8211; nejv&#253;konn&#283;j&#353;&#237; pln&#283; open source multiklientsk&#253; index&#225;tor metadat m&#233;di&#237; a server.
+
+    Emby for Kodi je absolutn&#283; nejlep&#353;&#237; zp&#367;sob, jak si u&#382;&#237;t neuv&#283;&#345;iteln&#253; p&#345;ehr&#225;vac&#237; engine Kodi v kombinaci s v&#253;konem centralizovan&#233; datab&#225;ze Emby. Vlastnosti: P&#345;&#237;m&#225; integrace s knihovnou Kodi pro nativn&#237; rychlost Kodi Okam&#382;it&#225; synchronizace se serverem Emby Pln&#225; podpora sb&#237;rek film&#367;, TV a hudby Emby Server p&#345;&#237;m&#253; stream a podpora p&#345;ek&#243;dov&#225;n&#237; &#8211; pou&#382;&#237;vejte Kodi, kdy&#382; jste mimo domov!</description>
+        <description lang="de">Willkommen bei Emby f&#252;r Kodi. Eine v&#246;llig neue M&#246;glichkeit, Ihre Medienbibliothek zu verwalten und anzuzeigen. Das Emby-Add-on f&#252;r Kodi kombiniert das Beste von Kodi &#8211; extrem reibungslose Navigation, sch&#246;ne Benutzeroberfl&#228;chen und Wiedergabe jeder Datei unter der Sonne &#8211; und Emby &#8211; den leistungsst&#228;rksten, vollst&#228;ndig Open-Source-Multi-Client-Medienmetadaten-Indexer und -Server.
+
+    Emby f&#252;r Kodi ist die absolut beste M&#246;glichkeit, die unglaubliche Kodi-Wiedergabe-Engine kombiniert mit der Leistungsf&#228;higkeit der zentralisierten Datenbank von Emby zu genie&#223;en. Funktionen: Direkte Integration mit der Kodi-Bibliothek f&#252;r native Kodi-Geschwindigkeit. Sofortige Synchronisierung mit dem Emby-Server. Volle Unterst&#252;tzung f&#252;r Film-, Fernseh- und Musiksammlungen. Emby Server-Direktstream- und Transkodierungsunterst&#252;tzung &#8211; verwenden Sie Kodi, wenn Sie nicht zu Hause sind.</description>
+        <description lang="fr">Bienvenue dans Emby pour Kodi Une toute nouvelle fa&#231;on de g&#233;rer et d&#39;afficher votre biblioth&#232;que multim&#233;dia. L&#39;addon Emby pour Kodi combine le meilleur de Kodi - une navigation ultra fluide, de belles interfaces utilisateur et la lecture de n&#39;importe quel fichier sous le soleil, et Emby - l&#39;indexeur et le serveur de m&#233;tadonn&#233;es multim&#233;dia multi-client enti&#232;rement open source le plus puissant.
+
+    Emby pour Kodi est le meilleur moyen absolu de profiter de l&#39;incroyable moteur de lecture Kodi combin&#233; &#224; la puissance de la base de donn&#233;es centralis&#233;e d&#39;Emby. Caract&#233;ristiques&#160;: Int&#233;gration directe avec la biblioth&#232;que Kodi pour une vitesse Kodi native Synchronisation instantan&#233;e avec le serveur Emby Prise en charge compl&#232;te des collections de films, de t&#233;l&#233;vision et de musique Prise en charge directe du flux et du transcodage du serveur Emby - utilisez Kodi lorsque vous n&#39;&#234;tes pas chez vous&#160;!</description>
+        <description lang="it">Benvenuto in Emby per Kodi Un modo completamente nuovo per gestire e visualizzare la tua libreria multimediale. L&#39;addon Emby per Kodi combina il meglio di Kodi: navigazione ultra fluida, bellissime interfacce utente e riproduzione di qualsiasi file sotto il sole, ed Emby, il pi&#249; potente indicizzatore e server di metadati multimediali multi-client completamente open source.
+
+    Emby per Kodi &#232; il modo migliore in assoluto per godersi l&#39;incredibile motore di riproduzione di Kodi combinato con la potenza del database centralizzato di Emby. Caratteristiche: Integrazione diretta con la libreria Kodi per la velocit&#224; nativa di Kodi Sincronizzazione istantanea con il server Emby Supporto completo per raccolte di film, TV e musica Emby Server streaming diretto e supporto per la transcodifica: usa Kodi quando sei lontano da casa!</description>
+        <description lang="nl">Welkom bij Emby voor Kodi Een geheel nieuwe manier om uw mediabibliotheek te beheren en te bekijken. De Emby-add-on voor Kodi combineert het beste van Kodi - ultrasoepele navigatie, prachtige gebruikersinterfaces en het afspelen van elk bestand onder de zon, en Emby - de krachtigste volledig open source multi-client mediametadata-indexer en -server.
+
+    Emby voor Kodi is absoluut de beste manier om te genieten van de ongelooflijke Kodi-afspeelengine in combinatie met de kracht van Emby&#39;s gecentraliseerde database. Kenmerken: Directe integratie met de Kodi-bibliotheek voor native Kodi-snelheid Onmiddellijke synchronisatie met de Emby-server Volledige ondersteuning voor film-, tv- en muziekcollecties Ondersteuning voor directe stream en transcodering van Emby Server - gebruik Kodi wanneer u niet thuis bent!</description>
+        <description lang="pl">Witamy w Emby dla Kodi Zupe&#322;nie nowy spos&#243;b zarz&#261;dzania bibliotek&#261; multimedi&#243;w i przegl&#261;dania jej. Dodatek Emby dla Kodi &#322;&#261;czy w sobie to, co najlepsze w Kodi &#8211; ultra p&#322;ynn&#261; nawigacj&#281;, pi&#281;kne interfejsy u&#380;ytkownika i odtwarzanie dowolnego pliku pod s&#322;o&#324;cem oraz Emby &#8211; najpot&#281;&#380;niejszy w pe&#322;ni open source indeksator metadanych multimedi&#243;w dla wielu klient&#243;w i serwer.
+
+    Emby dla Kodi to absolutnie najlepszy spos&#243;b, aby cieszy&#263; si&#281; niesamowitym silnikiem odtwarzania Kodi w po&#322;&#261;czeniu z moc&#261; scentralizowanej bazy danych Emby. Funkcje: Bezpo&#347;rednia integracja z bibliotek&#261; Kodi dla natywnej szybko&#347;ci Kodi Natychmiastowa synchronizacja z serwerem Emby Pe&#322;na obs&#322;uga kolekcji film&#243;w, program&#243;w telewizyjnych i muzyki Serwer Emby obs&#322;uguje bezpo&#347;redni&#261; transmisj&#281; strumieniow&#261; i transkodowanie &#8212; korzystaj z Kodi, gdy jeste&#347; poza domem!</description>
+        <description lang="sv">V&#228;lkommen till Emby f&#246;r Kodi Ett helt nytt s&#228;tt att hantera och visa ditt mediebibliotek. Emby-till&#228;gget f&#246;r Kodi kombinerar det b&#228;sta fr&#229;n Kodi - ultrasmidig navigering, vackra anv&#228;ndargr&#228;nssnitt och uppspelning av alla filer under solen, och Emby - den mest kraftfulla helt &#246;ppen k&#228;llkod f&#246;r multiklient-metadataindexerare och -server.
+
+    Emby for Kodi &#228;r det absolut b&#228;sta s&#228;ttet att njuta av den otroliga Kodi-uppspelningsmotorn i kombination med kraften i Embys centraliserade databas. Funktioner: Direkt integration med Kodi-biblioteket f&#246;r inbyggd Kodi-hastighet Omedelbar synkronisering med Emby-servern Fullst&#228;ndigt st&#246;d f&#246;r film-, TV- och musiksamlingar Emby Server direktstr&#246;mning och omkodningsst&#246;d - anv&#228;nd Kodi n&#228;r du &#228;r borta fr&#229;n hemmet!</description>
+        <description lang="zh">欢迎使用 Emby for Kodi，这是一种管理和浏览媒体库的全新方式。Kodi 的 Emby 插件融合了 Kodi 的优势——超流畅的导航、精美的用户界面和几乎支持所有格式的文件播放，以及 Emby——功能最强大的完全开源多客户端媒体元数据索引器和服务器。
+
+Emby for Kodi 是体验卓越的 Kodi 播放引擎与 Emby 集中式数据库强大功能相结合的最佳选择。主要特性：与 Kodi 媒体库直接集成，带来原生 Kodi 速度；与 Emby 服务器即时同步；全面支持电影、电视和音乐收藏；Emby 服务器提供直接流媒体和转码支持——即使出门在外也能使用 Kodi！</description>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+            <screenshot>resources/screenshot1.jpg</screenshot>
+            <screenshot>resources/screenshot2.jpg</screenshot>
+            <screenshot>resources/screenshot3.jpg</screenshot>
+            <screenshot>resources/screenshot4.jpg</screenshot>
+        </assets>
+    </extension>
+</addon>
+<addon id="plugin.cloudstorage.webdav.refresh" name="WebDAV Refresh (OpenList)" version="0.2.1" provider-name="forbxy">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.requests" version="2.25.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="default.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Refreshes WebDAV/OpenList directory</summary>
+        <description lang="en_GB">Triggers a remote refresh on OpenList/AList server for the current directory.</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+<addon id="metadata.tvshows.tmdb.cn.optimization"
+  name="TMDb TV CN Optimization"
+  version="1.7.9"
+  provider-name="Team Kodi+forbxy">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+    <import addon="xbmc.metadata" version="2.1.0"/>
+    <import addon="script.module.requests" version="2.25.0"/>
+  </requires>
+  <extension point="xbmc.metadata.scraper.tvshows" library="main.py" cachepersistence="00:15"/>
+
+  <extension point="xbmc.addon.metadata">
+    <reuselanguageinvoker>true</reuselanguageinvoker>
+    <news>1.7.4
+fix for breaking change to TMDB API for fanart
+	</news>
+    <platform>all</platform>
+    <license>GPL-3.0-or-later</license>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+	<forum>https://forum.kodi.tv/showthread.php?tid=357232</forum>
+    <website>https://www.themoviedb.org</website>
+    <source>https://github.com/xbmc/metadata.tvshows.themoviedb.org.python</source>
+    <summary lang="be_BY">Атрымліваць метаданыя серыялаў з themoviedb.org</summary>
+    <summary lang="ca_ES">Agafa les metadades de les sèries de themoviedb.org</summary>
+    <summary lang="cs_CZ">Získat metadata pro seriály z themoviedb.org</summary>
+    <summary lang="da_DK">Hent metadata til tv-shows fra themoviedb.org</summary>
+    <summary lang="de_DE">TV-Show-Metadaten von themoviedb.org abrufen</summary>
+    <summary lang="en_GB">Fetch TV Show metadata from themoviedb.org</summary>
+    <summary lang="es_ES">Obtener metadatos de Serie de TV de themoviedb.org</summary>
+    <summary lang="es_MX">Obtener metadatos de series de themoviedb.org</summary>
+    <summary lang="et_EE">Hangi seriaali metaandmed allikast themoviedb.org</summary>
+    <summary lang="fi_FI">The Movie Database (TMDB) -tietolähde televisiosarjoille</summary>
+    <summary lang="fr_FR">Récupérer les métadonnées d&apos;une série depuis themoviedb.org</summary>
+    <summary lang="hr_HR">Preuzmite metapodatke TV serija s themoviedb.org</summary>
+    <summary lang="id_ID">Ambil metadata Acara TV dari themoviedb.org</summary>
+    <summary lang="is_IS">Sækja lýsigögn sjónvarpsþátta frá themoviedb.org</summary>
+    <summary lang="it_IT">Recupera i metadati delle serie TV da themovedb.org</summary>
+    <summary lang="ko_KR">themoviedb.org에서 TV쇼 메타데이터를 가져옵니다</summary>
+    <summary lang="lv_LV">Iegūst TV pārraides datus no themoviedb.org vietnes</summary>
+    <summary lang="my_MM">themoviedb.org မှ TV Show မက်တာဒေတာကို ရယူပါ</summary>
+    <summary lang="nl_NL">Haal metadata van tv-programma&apos;s op van themoviedb.org</summary>
+    <summary lang="pl_PL">Pobieraj metadane programów telewizyjnch z themoviedb.org</summary>
+    <summary lang="pt_BR">Obter metadados de Séries em themoviedb.org</summary>
+    <summary lang="ru_RU">Получение метаданных о сериалах с сайта themoviedb.org</summary>
+    <summary lang="sk_SK">Získať metadáta pre seriály z themoviedb.org</summary>
+    <summary lang="sv_SE">Hämta metadata för TV-serier från themoviedb.org</summary>
+    <summary lang="tr_TR">TV Programları meta verilerini themoviedb.org sitesinden al</summary>
+    <summary lang="zh_CN">从 themoviedb.org 获取剧集信息</summary>
+    <description lang="be_BY">The Movie Database (TMDb) - база даных фільмаў і серыялаў, створаная супольнасцю. Усе даныя дадавалі ўдзельнікі гэтай цудоўнай супольнасці, пачынаючы з 2008. Шматнацыянасць і разнастайнасць даных - тое, чым мы вельмі ганарымся. Калі сказаць прасцей, то мы жывем супольнасцю, і гэта адрознівае нас ад іншых.</description>
+    <description lang="ca_ES">The Movie Database (TMDb) és una base de dades de pel·lícules i sèries creada per la comunitat. Cada dada ha estat afegida per la nostra increïble comunitat que data de 2008. El fort enfoc internacional i la quantitat de dades de TMDb és en gran mesura inigualable i una cosa de la qual estem increïblement orgullosos. En poques paraules, vivim i respirem comunitat i això és precisament el que ens fa diferents.</description>
+    <description lang="cs_CZ">The Movie Database (TMDb) je komunitní databáze filmů a seriálů. Každý kousek dat byl přidán naší úžasnou komunitou sahající až do roku 2008. Silné mezinárodní zaměření a rozsah dat TMDb jsou do značné míry bezkonkurenční a jsme na ně nesmírně hrdí. Jednoduše řečeno, žijeme a dýcháme komunitou, a to je přesně to, co nás odlišuje.</description>
+    <description lang="da_DK">The Movie Database (TMDb) er en community-bygget film- og tv-database. Hvert stykke data er blevet tilføjet af vores fantastiske community, der går tilbage til 2008. TMDbs stærke internationale fokus og bredde af data er stort set uovertruffen, og noget vi er utroligt stolte af. Enkelt sagt, vi lever og ånder community, og det er netop det, der gør os forskellige.</description>
+    <description lang="de_DE">The Movie Database (TMDb) ist eine Film- und TV-Datenbank. Seit 2008 wurde jeder einzelne Datensatz von einer tollen Community beigesteuert. TMDb&apos;s starker internationaler Fokus und die Vielfalt der Daten ist weitgehend unübertroffen. Die Betreiber von TMDb sind darauf sehr stolz. Vereinfacht gesagt, lebt und atmet TMDb den Community-Gedanken und das genau macht den Unterschied.</description>
+    <description lang="en_GB">The Movie Database (TMDb) is a community built movie and TV database. Every piece of data has been added by our amazing community dating back to 2008. TMDb&apos;s strong international focus and breadth of data is largely unmatched and something we&apos;re incredibly proud of. Put simply, we live and breathe community and that&apos;s precisely what makes us different.</description>
+    <description lang="es_ES">The Movie Database (TMDb) es una base de datos contruida comunitariamente sobre películas y TV. Cada pedazo de información ha sido añadida por nuestra increible comunidad desde 2008. El sólido enfoque internacional y la amplitud de datos de TMDb son en gran medida incomparables y es algo de lo que estamos increíblemente orgullosos. En pocas palabras, vivimos y respiramos en comunidad y eso es precisamente lo que nos hace diferentes.</description>
+    <description lang="es_MX">The Movie Database (TMDb) es una base de datos de películas y series creada por la comunidad. Cada pedazo de información ha sido agregada por nuestra increíble comunidad desde 2008. El fuerte enfoque internacional de TMDb y la variedad de información son en gran medida incomparables y algo de lo que estamos increíblemente orgullosos. En pocas palabras, vivimos y respiramos comunidad y eso es precisamente lo que nos hace diferentes.</description>
+    <description lang="et_EE">The Movie Database (TMDb) on kogukonna loodud filmide ja sarjade andmebaas. Meie imeline kogukond on lisanud kõik need andmed alates aastast 2008. TMDb tugev rahvusvaheline fookus ja andmete laius on suures osas võrreldamatud ja selle üle oleme ääretult uhked. Lihtsamalt öeldes elame ja hingame kogukonnas ning just see teebki meid erinevaks.</description>
+    <description lang="fi_FI">The Movie Database (TMDB) on yhteisön ylläpitämä, ilmainen ja avoin tietokanta elokuville ja televisiosarjoille. Palvelulla on miljoonia kuukausittaisia käyttäjiä ja sen tehokkaan rajapinnan avulla Kodi ja monet muut mediasovellukset voivat hyödyntää palvelun metatietoja ja mediakuvituksia käyttökokemuksen parantamiseen. Tietokannan vahva painotus kansaivälisyyteen ja kattava tietomäärä on suurelta osin ylivertainen ja olemme tästä erittäin ylpeitä. Yksinkertaisesti sanoen, elämme ja hengitämme yhteisönä ja juuri se tekee meistä erilaisia.</description>
+    <description lang="fr_FR">La base de données The Movie Database (TMDb) est un projet communautaire visant à référencer les informations de films et séries TV. Chaque information a été ajoutée par notre incroyable communauté, et ce depuis 2008. La force internationale du projet TMBd, ainsi que la diversité et l&apos;étendue de ces données l&apos;ont rendu leader dans ce domaine et nous en sommes extrêmement fière. Décrit simplement, nous vivons et respirons communauté et c&apos;est précisément ce qui nous rend différent.</description>
+    <description lang="hr_HR">The Movie Database (TMDb) je izgrađena od strane zajednice filmska i TV baza podataka. Svaki djelić podataka je dodan od strane naše izvanredne zajednice sve od 2008. TMDb snažan međunarodni fokus i širina podataka uglavnom su bez premca i nešto na što smo nevjerojatno ponosni. Jednostavno rečeno, mi živimo i dišemo za zajednicu i upravo to nas čini drugačijima.</description>
+    <description lang="id_ID">The Movie Database (TMDb) adalah database film dan TV yang dibangun oleh komunitas. Setiap bagian data telah ditambahkan oleh komunitas kami yang luar biasa sejak tahun 2008. Fokus internasional TMDb yang kuat dan luasnya data sebagian besar tak tertandingi dan sesuatu yang sangat kami banggakan. Sederhananya, kita hidup dan bernafas dalam komunitas dan justru itulah yang membuat kita berbeda.</description>
+    <description lang="is_IS">The Movie Database (TMDb) er samfélagslegur gagnagrunnur kvikmynda- og sjónvarpsefnis. Hver einasti gagnabútur hefur verið settur inn af frábærum liðsmönnum okkar allar götur síðan 2008. Mikil alþjóðleg áhersla TMDb ásamt breiðu sviði gagna sést óvíða og er eitthvað sem við erum ótrúlega stolt af. Sett fram á einfaldan máta, við lifum og hrærumst í þessu samfélagi og það er nákvæmlega þess vegna sem við erum öðruvísi.</description>
+    <description lang="it_IT">Il Movie Database (TMDb) è un database di film e TV creato dalla comunità. Ogni dato è stato aggiunto dalla nostra straordinaria comunità che risale al 2008. La forte attenzione internazionale e l&apos;ampiezza dei dati di TMDb sono in gran parte impareggiabili e qualcosa di cui siamo incredibilmente orgogliosi. In parole povere, viviamo e respiriamo in comunità ed è proprio questo che ci rende diversi.</description>
+    <description lang="ko_KR">The Movie Database (TMDb)는 영화와 TV 데이터베이스를 구축한 커뮤니티입니다. 모든 자료들은 우리 놀라운 커뮤니티에서 2008년부터 추가돼 온 것들입니다. TMDb의 강력한 국제적 초점과 광범위한 데이터는 타의 추종을 불허하며 우리가 자랑스러워하는 점입니다. 간단히 말해, 우리는 커뮤니티와 살고 호흡하며 그것이 우리가 다른 점입니다.</description>
+    <description lang="lv_LV">The Movie Database (TMDb) ir kopienas veidota filmu un TV seriālu datubāze. Visus datus ir pievienojusi mūsu apbrīnojamā kopiena kopš 2008. gada. TMDb spēcīgais globālais statuss un milzīgais datu apjoms lielā mērā ir nepārspējams, un tas ir ar ko mēs neticami lepojamies. Vienkārši sakot, mēs dzīvojam TMDb sabiedrībā, un tieši tas mūs atšķir no citiem.</description>
+    <description lang="my_MM">Movie Database (TMDb) သည် ကွန်မြူနတီတည်ဆောက်ထားသော ရုပ်ရှင်နှင့် TV ဒေတာဘေ့စ်တစ်ခုဖြစ်သည်။ 2008 ခုနှစ်မှ စတင်ခဲ့သော ကျွန်ုပ်တို့၏ အံ့သြဖွယ်ကောင်းသော အသိုက်အဝန်းမှ ဒေတာအစိတ်အပိုင်းတိုင်းကို ပေါင်းထည့်ထားပါသည်။ TMDb ၏ ခိုင်မာသော နိုင်ငံတကာအာရုံစိုက်မှုနှင့် ဒေတာအကျယ်အဝန်းသည် ကြီးမားစွာမယှဉ်နိုင်ဖြစ်ပြီး ကျွန်ုပ်တို့အတွက် အလွန်ဂုဏ်ယူမိပါသည်။ ရိုးရိုးရှင်းရှင်းပြောရလျှင် ကျွန်ုပ်တို့သည် အသိုက်အဝန်းကို ရှင်သန်နေထိုင်ပြီး ရှူရှိုက်ကာ ၎င်းသည် ကျွန်ုပ်တို့ကို ကွဲပြားစေသည်။</description>
+    <description lang="nl_NL">De Movie Database (TMDb) is een door de gemeenschap gebouwde film- en tv-database. Elk stukje data is toegevoegd door onze geweldige community die teruggaat tot 2008. TMDb&apos;s sterke internationale focus en brede waaier aan data is grotendeels ongeëvenaard en iets waar we ongelooflijk trots op zijn. Simpel gezegd, we leven en ademen gemeenschap en dat is precies wat ons anders maakt.</description>
+    <description lang="pl_PL">The Movie Database (TMDb) to baza filmów i programów telewizyjnych zbudowana przez społeczność. Każdy element danych został dodany przez naszą niesamowitą społeczność od 2008 roku. Silna międzynarodowa koncentracja TMDb i zakres danych są w dużej mierze niezrównane i jesteśmy z tego niesamowicie dumni. Mówiąc prościej, żyjemy i oddychamy wspólnotą i właśnie to nas wyróżnia.</description>
+    <description lang="pt_BR">The Movie Database (TMDb) é um banco de dados de filmes e séries criado pela comunidade. Cada um dos pedaços de dados foram adicionados por nossa incrível comunidade desde 2008. O forte foco internacional e a amplitude de dados do TMDb são incomparáveis, algo do qual temos muito orgulho. Resumindo, vivemos e respiramos comunidade e é precisamente isso que nos torna diferentes.</description>
+    <description lang="ru_RU">The Movie Database (TMDb) - это база данных фильмов и сериалов, созданная сообществом. Все данные были добавлены нашим замечательным сообществом, начиная с 2008 года. Международная направленность и широта данных TMDb во многом не имеют себе равных, и это то, чем мы невероятно гордимся. Проще говоря, мы живём и дышим сообществом, и именно это отличает нас от других.</description>
+    <description lang="sv_SE">The Movie Database (TMDb) är en communitybyggd film- och TV-databas. All data har lagts till av våra fantastiska medlemmar ända sen 2008. TMDbs starka internationella fokus och bredd är i stort sett oöverträffad och något vi är väldigt stolta över. Communityn är hjärtat i det hela och det är det som skiljer oss från mängden.</description>
+    <description lang="tr_TR">The Movie Database (TMDb), topluluk tarafından oluşturulmuş bir film ve TV veritabanıdır. Her bir veri parçası, 2008 yılına dayanan muhteşem topluluğumuz tarafından eklenmiştir. TMDb&apos;nin güçlü uluslararası odağı ve veri genişliği büyük ölçüde benzersizdir ve inanılmaz derecede gurur duyduğumuz bir şeydir. Basitçe söylemek gerekirse, topluluk içinde yaşıyor ve nefes alıyoruz ve bizi farklı kılan da tam olarak bu.</description>
+    <description lang="zh_CN">TMDb 是一个由网络社区创建的影视数据库。每一条数据都是由我们令人惊叹的社区添加的，可以追溯到2008年。TMDb 强大的国际关注度和数据广度在很大程度上是无与伦比的，我们对此感到无比自豪。简单地说，我们生活在社区中，呼吸着社区的气息，这正是我们与众不同的原因。</description>
+  </extension>
+</addon>
+<addon id="script.emby.nextgen.cleaner" name="Emby Next Gen 卸载清理工具" version="1.0.0" provider-name="Forbxy">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="default.py" />
+    <extension point="xbmc.addon.metadata">
+        <summary lang="zh_CN">清理 Emby Next Gen 卸载后的残留数据</summary>
+        <description lang="zh_CN">请先在 Emby Next Gen 插件中执行“恢复出厂设置”，然后卸载 Emby Next Gen 插件，最后运行本插件以彻底清理Next Gen相关的配置残留。清理完需要重启kodi</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+<addon id="repository.forbxy.ghproxy" name="kodi forbxy Add-on repository (GHProxy)" version="1.2.0" provider-name="forbxy">
+    <extension point="xbmc.addon.repository" name="kodi forbxy Add-on repository (GHProxy)">
+        <dir>
+            <info compressed="false">https://kodi8.com/addons.xml</info>
+            <checksum>https://kodi8.com/addons.xml.md5</checksum>
+            <datadir zip="true">https://gh-proxy.org/https://raw.githubusercontent.com/forbxy/repository.forbxy/master/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Forbxy's Kodi Add-on Repository</summary>
+        <description>A repository for custom Kodi add-ons.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.jpg</icon>
+        </assets>
+    </extension>
+</addon>
+<addon id="script.controller.switcher" name="Controller Switcher" version="1.2.0" provider-name="forbxy">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+  </requires>
+  <extension point="xbmc.python.script" library="default.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>windows android linux</platform>
+    <summary lang="zh_CN">遥控器适配和自定义按键编辑器</summary>
+    <description lang="zh_CN">项目主页：github.com/forbxy[CR]插件内置了十多个常见遥控的适配方案，遥控某些按键无响应？一键加载立刻解决！[CR][CR]插件同时包含一个非常直观的按键映射编辑器，可以轻松自定义按键功能。</description>
+    <license>GPL-2.0</license>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>android-aarch64</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-android-aarch64.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>android-armv7</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-android-armv7.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>linux-aarch64</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-linux-aarch64.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>linux-i686</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-linux-i686.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>linux-x86_64</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-linux-x86_64.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>osx-arm64</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-osx-arm64.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>osx-x86_64</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-osx-x86_64.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>windows-i686</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-windows-i686.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>windows-x86_64</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-windows-x86_64.zip</path>
+    </extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.2.7" name="Fast Stream VFS" provider-name="forbxy">
+  
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.2" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+  </requires>
+
+  
+  <extension point="kodi.vfs" files="true" directories="false" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+
+  <extension point="xbmc.addon.metadata">
+    
+    <summary lang="zh_CN">高性能流媒体加速器</summary>
+    <description lang="zh_CN">提前缓存文件头尾做内存响应，解决kodi无法播放网络链接ISO文件的问题</description>
+    <assets>
+      
+    </assets>
+  
+            <platform>linux-armv7 linux</platform>
+            <path>vfs.stream.fast/vfs.stream.fast-1.2.7-linux-armv7.zip</path>
+    </extension>
+</addon>
+<addon id="metadata.tmdb.cn.optimization"
+       name="TMDB CN Optimization"
+       version="3.2.5"
+       provider-name="Team Kodi+forbxy">
+  <requires>
+    <import addon="xbmc.metadata" version="2.1.0"/>
+    <import addon="xbmc.python" version="3.0.0"/>
+    <import addon="script.module.requests" version="2.25.0"/>
+  </requires>
+  <extension point="xbmc.metadata.scraper.movies"
+             library="python/scraper.py"/>
+  <extension point="xbmc.python.script" library="python/kodi_scraper_thread.py">
+      <provides>executable</provides>
+  </extension>
+  
+  <extension point="xbmc.addon.metadata">
+    <reuselanguageinvoker>true</reuselanguageinvoker>
+    <news>v3.1.4 (2025-12-27)
+- Change default language to zh-CN
+- Optimize scraper performance with persistent service and parallel requests
+
+v3.1.3 (2025-10-12)
+- fix missing fanart from TMDB either way
+
+v3.1.2 (2025-10-05)
+- fix missing fanart from TMDB
+
+v3.0.0 (2024-04-17)
+- version 3 for Kodi 20 Nexus and above</news>
+    <platform>all</platform>
+    <license>GPL-2.0-or-later</license>
+    <forum>https://forum.kodi.tv/showthread.php?tid=344580</forum>
+    <website>https://www.themoviedb.org</website>
+    <source>https://github.com/xbmc/metadata.themoviedb.org.python</source>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+    <summary lang="af_ZA">TMDB Fliek Skraper</summary>
+    <summary lang="be_BY">Сродак для атрымання звестак пра фільмы на аснове TMDB</summary>
+    <summary lang="bg_BG">Сваля инф. за филми от TMDB</summary>
+    <summary lang="bs_BA">Python TMDB filmski strugač</summary>
+    <summary lang="ca_ES">Raspador Python de pel·lícules de TMDB</summary>
+    <summary lang="cs_CZ">Python TMDB zdroj filmových metadat</summary>
+    <summary lang="cy_GB">Crafwr Ffilmiau TMDB</summary>
+    <summary lang="da_DK">Python TMDB scraper til film</summary>
+    <summary lang="de_DE">Python TMDB Film-Scraper</summary>
+    <summary lang="el_GR">Scraper Ταινιών του TMDb</summary>
+    <summary lang="en_GB">Python TMDB Movie Scraper</summary>
+    <summary lang="en_NZ">Python TMDB Movie Scraper</summary>
+    <summary lang="en_US">Python TMDB Movie Scraper</summary>
+    <summary lang="es_AR">Scraper de Películas de TheMovieDB</summary>
+    <summary lang="es_ES">Scraper de películas para TheMovieDB</summary>
+    <summary lang="es_MX">Scraper de Películas TMDb</summary>
+    <summary lang="et_EE">Python TMDB filmikaabits</summary>
+    <summary lang="fi_FI">The Movie Database (TMDB) Python -tietolähde elokuville</summary>
+    <summary lang="fr_CA">Extracteur de films TMDB</summary>
+    <summary lang="fr_FR">Collecteur de Films TMDB</summary>
+    <summary lang="gl_ES">Scraper de Filme de TMDB</summary>
+    <summary lang="he_IL">TMDB סקרייפר סרטים</summary>
+    <summary lang="hr_HR">TMDB filmski sakupljač informacija</summary>
+    <summary lang="hu_HU">TMDB filmadat leolvasó</summary>
+    <summary lang="id_ID">Pengais Film Python TMDB</summary>
+    <summary lang="is_IS">Python-TMDB kvikmyndaskafa</summary>
+    <summary lang="it_IT">Scraper per Python TMDB Movie</summary>
+    <summary lang="ja_JP">TMDB映画のスクレーパー</summary>
+    <summary lang="ko_KR">TMDB 영화 정보수집기</summary>
+    <summary lang="lt_LT">TMDB filmų skreperis</summary>
+    <summary lang="lv_LV">Python The Movie Database (TMDb) filmu skrāpis</summary>
+    <summary lang="mk_MK">TMDB инфо за филмови</summary>
+    <summary lang="ml_IN">മൂവി ഡി ബി, വിവരശേഖരം</summary>
+    <summary lang="ms_MY">Pengikis Cakera TMDB</summary>
+    <summary lang="my_MM">TMDB Movie Scraper</summary>
+    <summary lang="nb_NO">TMDB-skraper</summary>
+    <summary lang="nl_NL">Python TMDb-filmscraper</summary>
+    <summary lang="pl_PL">Ekstraktor filmowy TMDB</summary>
+    <summary lang="pt_BR">Scraper de Filmes TMDb</summary>
+    <summary lang="pt_PT">Colector de filmes TMDb</summary>
+    <summary lang="ro_RO">Catalog de filme TMDb</summary>
+    <summary lang="ru_RU">Инфоресурс на базе TMDB</summary>
+    <summary lang="se">Skrapa för TMDb</summary>
+    <summary lang="sk_SK">Phyton TheMovieDB sťahovač filmových metadát</summary>
+    <summary lang="sl_SI">Ponudnik informacij o filmih TMDB</summary>
+    <summary lang="sv_SE">Python TMDB Filmskrapa</summary>
+    <summary lang="ta_IN">LastFM நிகழ்படம் சுரண்டி</summary>
+    <summary lang="th_TH">ตัวรับข้อมูลภาพยนต์ TMDB</summary>
+    <summary lang="tr_TR">Python TMDB Film Bilgi Sağlayıcısı</summary>
+    <summary lang="uk_UA">Екстрактор даних про фільми з TMDb</summary>
+    <summary lang="vi_VN">Trình lấy dữ liệu Phim từ TMDB</summary>
+    <summary lang="zh_CN">TMDB 电影刮削器</summary>
+    <summary lang="zh_TW">TMDB 電影資料爬蟲</summary>
+    <description lang="af_ZA">themoviedb.org is &apos;n verniet en oop fliek databasis. Dit is totaal gebruiker gedryf deur mense soos jy. TMDB word huidiglik deur miljoene mense elke maand gebruik, en met hulle kragtige API word dit ook deur baie gewilde media sentrums soos Kodi gebruik om Fliek Metadata, Plakkate en Ondersteunerkuns te onttrek om die gebruiker se ondervinding te verryk.</description>
+    <description lang="be_BY">themoviedb.org - бясплатная і адкрытая база даных фільмаў. Яна напаўняецца і падтрымліваецца карыстальнікамі. TMDb штомесяц карыстаюцца мільёны людзей, а дзякуючы магутнаму API базу могуць выкарыстоўваць папулярныя медыяцэнтры накшталт Kodi, якія бяруць адтуль метаданыя, постары і ілюстрацыі.</description>
+    <description lang="bg_BG">themoviedb.org е безплатна и отворена филмова база данни. Задвижва се изцяло от потребителите си, от хора като вас. Милиони хора по света всеки месец ползват TMDb. Благодарение на многофункционално API може да се ползва от най-различни и популярни медийни центрове като Kodi, които извличат метаданни, постери и фанарт за филми с цел за красивото оформяне на интерфейса.</description>
+    <description lang="bs_BA">themoviedb.org je besplatna i otvorena baza podataka o filmovima. U potpunosti je vođena od strane korisnika poput vas. TMDb trenutno koriste milioni ljudi svakog mjeseca, a zahvaljujući svom moćnom API-ju, koriste ga i mnogi popularni medijski centri poput Kodija za preuzimanje metapodataka o filmovima, postera i umjetnosti obožavatelja kako bi obogatili korisničko iskustvo.</description>
+    <description lang="ca_ES">themoviedb.org és una base de dades gratuïta i oberta. Es manté completament per usuaris com tu. TMDb es fa servir per milions de persones cada mes i amb la seva potent API també és utilitzada per molts reproductors multimèdia com el Kodi per obtenir les metadades de pel·lícules, pòsters i fan art per enriquir l&apos;experiència d&apos;usuari.</description>
+    <description lang="cs_CZ">themoviedb.org je otevřená a svobodná databáze filmů. Je řízena uživateli, tedy lidmi jako vy. TMDB je každý měsíc používána milióny lidí a se svým výborným API je také používano mnoha populárními mediálními centry jako je Kodi, k získávání metadat, plagátů a fanartu filmů pro obohacení uživatelského zážitku.</description>
+    <description lang="cy_GB">Mae themoviedb.org yn gronfa ddata ffilmiau rhydd ac agored. Mae&apos;n cael ei yrru gan ddefnyddwyr fel chi. Mae TMDb yn cael ei ddefnyddio gan filiynau o bobl bob mis a gyda&apos;i API pwerus, mae&apos;n cael ei ddefnyddio gan lawer o&apos;r canolfannau cyfrwng fel Kodi i estyn metadata ffilmiau, posteri a chelf er mwyn cyfoethogi profiad defnyddwyr.</description>
+    <description lang="da_DK">themoviedb.org er en gratis og åben filmdatabase. Den er helt og aldeles brugerdrevet af folk som dig. TMDb bruges i øjeblikket af millioner af mennesker hver måned, og med deres kraftfulde API bruges den også af mange populære mediecentre såsom Kodi til at hente filmmetadata, plakater og fankunst for at berige brugerens oplevelse.</description>
+    <description lang="de_DE">TheMovieDB.org ist eine freie und offene Filmdatenbank. Sie wird komplett von ihren Anwendern betrieben. TMDB wird von Millionen von Menschen und dank ihrer mächtigen API auch von vielen Media-Centern, wie z. B. Kodi, benutzt, um Film-Metadaten, Poster und Fanarts zu beziehen.</description>
+    <description lang="el_GR">Το themoviedb.org είναι μία δωρεάν και ανοικτή βάση δεδομένων ταινιών. Διαχειρίζεται πλήρως από ανθρώπους σαν και εσάς. Το TMDb χρησιμοποιείται από εκατομμύρια ανθρώπους κάθε μήνα, και με το πανίσχυρο API τους, χρησιμοποιείται και από πολλά δημοφιλή κέντρα πολυμέσων όπως το Kodi για να λαμβάνουν μετα-δεδομένα Ταινιών, Αφίσες και Fanart για εμπλουτισμό της εμπειρίας του χρήστη.</description>
+    <description lang="en_GB">themoviedb.org is a free and open movie database. It&apos;s completely user driven by people like you. TMDb is currently used by millions of people every month and with their powerful API, it is also used by many popular media centers like Kodi to retrieve Movie Metadata, Posters and Fanart to enrich the user&apos;s experience.</description>
+    <description lang="en_NZ">themoviedb.org is a free and open movie database. It&apos;s completely user driven by people like you. TMDb is currently used by millions of people every month and with their powerful API, it is also used by many popular media centers like Kodi to retrieve Movie Metadata, Posters and Fanart to enrich the user&apos;s experience.</description>
+    <description lang="en_US">themoviedb.org is a free and open movie database. It&apos;s completely user driven by people like you. TMDb is currently used by millions of people every month and with their powerful API, it is also used by many popular media centers like Kodi to retrieve Movie Metadata, Posters and Fanart to enrich the user&apos;s experience.</description>
+    <description lang="es_AR">themovieDB.org es una base de datos de películas gratuita y abierta. Está formada con contenido subido por usuarios como vos. TMDb es actualmente utilizada por millones de personas cada mes y, gracias a su poderosa API, es usada por muchos programas populares como Kodi para descargar Información de Películas, Posters y Fanart para enriquecer la experiencia de usar Kodi.</description>
+    <description lang="es_ES">themovieDB.org es una base de datos de películas gratuita y abierta. Esta completamente gestionada por gente como tú. TMDb se usa diariamente por millones de personas gracias a su potente API, que es usada por más programas aparte de Kodi para descargar información de películas así como pósters o fanart para enriquecer la experiencia de usar Kodi.</description>
+    <description lang="es_MX">themoviedb.org es una base de datos de películas gratis y abierta. Es completamente manejada por usuarios y personas como tu. Actualmente TMDb es usada por millones de personas cada mes, y dado a su poderosa API, es usada también por varios media centers populares como Kodi para obtener Metada de Películas, Posters y Fanarts, enriqueciendo de esta manera la experiencia del usuario.</description>
+    <description lang="et_EE">themoviedb.org on tasuta ja avatud filmide andmebaas. See on täielikult kasutajate poolt hooldatud. TMDb-d kasutavad igal kuul miljonid inimesed. Seda kasutatakse kasutajakogemuse rikastamiseks paljudes teistes populaarsetes programmides, nagu Kodi, laadides alla filmiteavet, plakateid ja fännikunsti.</description>
+    <description lang="fi_FI">The Movie Database (TMDB) on yhteisön ylläpitämä, ilmainen ja avoin tietokanta elokuville ja televisiosarjoille. Palvelulla on miljoonia kuukausittaisia käyttäjiä ja sen tehokkaan rajapinnan avulla Kodi ja monet muut mediasovellukset voivat hyödyntää palvelun metatietoja ja mediakuvituksia käyttökokemuksen parantamiseen. Tietokannan vahva painotus kansaivälisyyteen ja kattava tietomäärä on suurelta osin ylivertainen ja olemme tästä erittäin ylpeitä. Yksinkertaisesti sanoen, elämme ja hengitämme yhteisönä ja juuri se tekee meistä erilaisia.</description>
+    <description lang="fr_CA">themoviedb.org est une base de données libre et ouverte. Elle est complètement gérée par des gens comme vous. TMDb est actuellement utilisée par des millions de personnes chaque mois et avec son API puissante, elle est également utilisée par de nombreux centres multimédias populaires comme Kodi pour récupérer les métadonnées des films, les affiches et le fanart afin d&apos;enrichir l&apos;expérience de l&apos;utilisateur.</description>
+    <description lang="fr_FR">themoviedb.org est une base de données de films gratuite et libre d&apos;accès. Elle est totalement gérée par les utilisateurs. TMDb est actuellement utilisée par des millions de personnes chaque mois et, grâce à ses puissantes fonctions et routines, elle est également utilisée par de nombreux Media Centers populaires comme Kodi afin de récupérer les Métadonnées, Posters et Fanarts des films en vue d&apos;améliorer l&apos;expérience de l&apos;utilisateur.</description>
+    <description lang="gl_ES">themoviedb.org é una base de datos sobre filmes libre e aberta, impulsada por xente coma ti. Na actualidade TMDb é usada por millóns de persoas todos os meses, e grazas ó seu potente API, usado por algúns dos centros multimedia máis populares como Kodi para obter a información dos filmes, Posters e Fanart e así mellorar a experiencia do usuario.</description>
+    <description lang="hr_HR">themoviedb.org je besplatna i otvorena baza filmskih podataka. TMDb trenutno koriste milijuni ljudi svaki mjesec uz pomoću njegovog snažnog API-ja, isto tako se koristi u mnogim popularnim medijskim centrima poput Kodija, kako bi mogli prikupljati informacije o filmovima, filmske plakate, omote filmova i na kraju obogatiti korisničko iskustvo.</description>
+    <description lang="hu_HU">A themoviedb.org egy ingyenes és nyílt filmadatbázis. Teljes egészében olyan felhasználók töltik fel, mint például Te. A TMDb-t havonta emberek milliói használják és a hatékony API-n keresztül számos népszerű média center is, mint például az Kodi a filmadatok, poszterek, fanartképek letöltésére.</description>
+    <description lang="id_ID">themoviedb.org adalah database film yang gratis dan terbuka. Ini sepenuhnya didorong oleh pengguna oleh orang-orang seperti Anda. TMDb saat ini digunakan oleh jutaan orang setiap bulan dan dengan API mereka yang kuat, TMDb juga digunakan oleh banyak pusat media populer seperti Kodi untuk mengambil Metadata Film, Poster, dan Fanart untuk memperkaya pengalaman pengguna.</description>
+    <description lang="is_IS">themoviedb.org er ókeypis og opinn gagnagrunnur. Hann er algjörlega rekinn af fólki eins og þér. TMBd er notaður af milljónum manns í hverjum mánuði og með öflugum forritaskilum þeirra (API), er hann líka notaður af mörgum vinsælum heimabíókerfum eins og Kodi til að ná í ítarupplýsingar um kvikmyndir, veggspjöld og aðdáendamyndir til að lífga upplifun notandans.</description>
+    <description lang="it_IT">themovedb.org è un database di film gratuito e aperto. È completamente creato da persone come te. TMDb è attualmente utilizzato da milioni di persone ogni mese e con la loro potente API, è utilizzato anche da molti centri multimediali popolari come Kodi per recuperare metadati di film, poster e fanart per arricchire l&apos;esperienza dell&apos;utente.</description>
+    <description lang="ja_JP">themoviedb.org は自由でオープンな映画データベースです。その運営は、完全にユーザ主導で行われています。TMDb は現在毎月何百万人もの人に利用されているほか、Kodi のようなメディアセンターも、TMDb のパワフルな API を介して映画メタデータ、ポスター、ファンアートを取得し、使い勝手を向上させるなどして使っています。</description>
+    <description lang="ko_KR">themoviedb.org 는 전적으로 여러분 같은 이용자가 주도하는 무료 공개 영화 데이터베이스입니다. TMDb 는 현재 매월 수백만의 사람들이 강력한 API와 함께 사용하고 있을 뿐만 아니라 Kodi 같은 많은 미디어 센터가 영화 정보, 포스터, 팬아트를 가져와 풍성한 사용자 경험을 제공하는데 이용되고 있습니다.</description>
+    <description lang="lt_LT">themoviedb.org yra nemokama ir atvira filmų duomenų bazė. Ji palaikoma tokių pat vartotojų kaip ir jūs. TMDb šiuo metu naudojama milijonų žmonių kiekvieną mėnesį ir turi galingą API, o taip pat naudojama daugelio populiarių media centrų, tokių kaip Kodi, kad gautų filmų metaduomenis, plakatus ir Fanart, siekiant praturtinti vartotojo patirtį.</description>
+    <description lang="lv_LV">themoviedb.org ir bezmaksas un publiski pieejama filmu datubāze. To to uztur tādi cilvēki kā jūs. Pašlaik TMDb izmanto miljoniem cilvēku katru mēnesi, un, pateicoties tā jaudīgajam API, tas tiek izmantots daudzos populāros multimedijas centros. Piemēram, Kodi, lai iegūtu filmu datus, vāka plakātus un fanu veidotos attēlus, lai bagātinātu Kodi lietotāja pieredzi.</description>
+    <description lang="ml_IN">മൂവി ഡി ബി, എല്ലാവർക്കും കൈവക്കാവുന്ന ഒരു സൗജന്യ വിവരശേഖരമാണ്. ഇതുമൂലം ലോകം മുഴുവനും സിനിമാ പോസ്റ്ററുകൾ എല്ലവരും കാണുന്നു</description>
+    <description lang="ms_MY">themoviedb.org adalah pangkalan data cakera terbuka. Ia sepenuhnya dipacu oleh individu seperti anda. TMDb buat masa ini diguna oleh berjuta-juta individu setiap bulan dan dengan API hebat mereka, ia juga digunakan oleh banyak pusat media popular seperti Kodi untuk mendapatkan Data Meta, Poster, Seni Peminat Cereka untuk memperkayakan pengalaman pengguna.</description>
+    <description lang="my_MM">themoviedb.org သည် အခမဲ့ဖြစ်ပြီး ပွင့်လင်းသော ရုပ်ရှင်ဒေတာဘေ့စ်တစ်ခုဖြစ်သည်။ TMDb ကို ၎င်း၏အားကောင်းသော API ဖြင့် လစဉ်လတိုင်း လူသန်းပေါင်းများစွာက အသုံးပြုလျက်ရှိပြီး Kodi ကဲ့သို့ နာမည်ကြီး မီဒီယာစင်တာများတွင်လည်း ရုပ်ရှင်အချက်အလက်၊ ရုပ်ရှင်ပိုစတာများ၊ ရုပ်ရှင်ကာဗာများကို စုဆောင်းကာ နောက်ဆုံးတွင် သုံးစွဲသူအတွေ့အကြုံကို ကြွယ်ဝစေပါသည်။</description>
+    <description lang="nb_NO">themoviedb.org er en fir og åpen filmdatabase. Den drives helt og fullt av mennesker som deg. TMDB brukes av millioner av mennesker hver måned og med sitt gode API, brukes den også av mange popluære mediasenterløsninger som Kodi for å hente metadata for filmer, plakater og fanart for å gi en bedre brukeropplevelse.</description>
+    <description lang="nl_NL">Themoviedb.org is een vrije en open filmdatabank. Gebruikers zoals jij vormen de motor van deze site. Op dit moment gebruiken elke maand miljoenen mensen TMDb. De krachtige API van de site laat mediacenters zoals Kodi toe om metadata, posters en fanart op te halen en zo de gebruikerservaring te verrijken.</description>
+    <description lang="pl_PL">themoviedb.org jest wolną i otwartą filmową bazą danych. Jest ona całkowicie zarządzana przez osoby takie jak Ty. Obecnie odwiedzają ją miliony osób miesięcznie, a dzięki dostępności interfejsu programistycznego jest używana przez wiele centrów multimedialnych, takich jak Kodi, do pobierania informacji o filmach, plakatów i fototapet.</description>
+    <description lang="pt_BR">O themoviedb.org é um banco de dados aberto e gratuito. É completamente operado por pessoas como você. O TMDb é atualmente usado por milhares de pessoas a cada mês e com sua poderosa API, é usado por muitas centrais de mídia populares como o Kodi para buscar metadados, cartazes e fanart de filmes para enriquecer a experiência do usuário.</description>
+    <description lang="pt_PT">O themoviedb.org é uma base de dados de filmes livre e aberta. É actualizado inteiramente por pessoas como você e usado por milhões todos os meses. Com o poderoso motor de busca disponível, também se tornou no favorito para muitos programas de centro de média, como o popular Kodi, para obter informação, posters e fanart que enriquecem a experiência do utilizador.</description>
+    <description lang="ro_RO">themoviedb.org este o bază de date de filme gratuită și deschisă. Este actualizată de oameni ca și tine. TMDb este actual folosită de milioane de oameni în fiecare lună și datorită API-ului puternic, este de asemenea folosită de multe centre media populare ca Kodi pentru a obține informații despre filme, afișe, decoruri și imagini produse de fani (Fanart), care îmbogățesc experiența utilizatorului.</description>
+    <description lang="ru_RU">themoviedb.org — это бесплатная и открытая база данных фильмов. Она полностью поддерживается обычными людьми. В данный момент сайт TMDb используют миллионы людей каждый месяц, и благодаря мощному API его могут использовать различные популярные медиацентры, такие как Kodi, чтобы получать метаданные, постеры и фанарт для фильмов с целью красивого оформления интерфейса.</description>
+    <description lang="se">themoviedb.org är en fri och öppen filmdatabas. Det drivs helt av människor som dig. TMDb används av miljontals människor varje månad och med deras kraftfulla API, är det också använt av många populära mediacenter som Kodi för att hämta filmmetadata, omslag och fanart för att förgylla användarens upplevelse.</description>
+    <description lang="sk_SK">themoviedb.org je voľná a otvorená databáza filmov. Je výlučne vedená užívateľmi ako si ty. TMDb je každý mesiac používaná miliónmi ľudí, a vďaka svojmu výkonnému API je veľmi populárna medzi &apos;media centrami&apos; ako Kodi pre sťahovanie filmových metadát, plagátov a fanartov pre obohatenie zážitkov.</description>
+    <description lang="sl_SI">themoviedb.org je brezplačna in prosta baza filmov. Je v celoti ustvarjena s strani uporabnikov kot ste vi. TMDB uporablja miljone ljudi in z njihovo močno API, jo lahko uporabljate tudi v multimedijskih centrih kot Kodi, s tem prenesete informacije o filmih, plakate in ozadja ter s tem popestrite uporabniško izkušnjo.</description>
+    <description lang="sv_SE">themoviedb.org är en gratis och öppen filmdatabas. Den drivs helt av människor som du. TMDb används för närvarande av miljoner människor varje månad och med deras kraftfulla API används den även av många populära mediacenter som t.ex. Kodi för att hämta metadata om filmer, affischer och fanart för att berika användarens upplevelse.</description>
+    <description lang="ta_IN">themoviedb.org ஒரு இலவச மற்றும் திறந்த திரைப்பட தரவுத்தளம் ஆகும். இந்த தரவுத்தளம் முற்றிலும் பயனர் மக்களால் இயக்கப்படுகிறது. TMDb அவர்களது சக்திவாய்ந்த API இனால் தற்போது பல இலட்சக்கணக்கான மக்களால் ஒவ்வொரு மாதமும் பயன்படுத்தப்படுகிறது, இது Kodi போன்ற பல பிரபல ஊடக மையங்களில் பயனர் அனுபவத்தை மேம்படுத்த பயன்படுத்தப்படுகிறது.</description>
+    <description lang="th_TH">themoviedb.org เป็นฐานข้อมูลภาพยนตร์ที่ฟรีและเปิดกว้าง. มันถูกขับเคลื่อนจากผู้ใช้ โดยคนเช่นคุณ. TMDb ปัจจุบันมีการใช้โดยคนนับล้านในแต่ละเดือน และมีประสิทธิภาพด้วย API ของพวกเขา , มันยังถูกใช้โดยหลายศูนย์สื่อที่นิยมเช่น Kodi เพื่อดึง อธิบายข้อมูลภาพยนตร์, โปสเตอร์และ แฟนอาร์ต เพื่อเพิ่มประสบการณ์ของผู้ใช้</description>
+    <description lang="tr_TR">themoviedb.org ücretsiz ve herkese açık bir film veri tabanıdır. Tamamen kullanıcılar tarafından oluşturulmakta ve yönetilmektedir. TMDb her ay milyonlarca kullanıcı tarafından kullanılmakta ve güçlü API&apos;si sayesinde Kodi gibi bir çok popüler medya merkezi tarafından Film Veritabanı, Poster ve Fanart bilgilerini kullanarak kullanıcı deneyimini zenginleştirmektedir.</description>
+    <description lang="uk_UA">themoviedb.org — це безкоштовна і відкрита база даних фільмів. Вона повністю підтримується звичайними людьми. На даний момент сайтом TMDb користуються мільйони людей кожен місяць. А завдяки потужному API цю базу можуть використовувати різні популярні медіацентри, такі як Kodi, отримуючи з неї метадані, постери і фанарт для фільмів для показу в своїх графічних інтерфейсах.</description>
+    <description lang="vi_VN">themoviedb.org là cơ sở dữ liệu về phim ảnh mở và miễn phí. Nó hoàn toàn được kiểm soát bởi những người như bạn. TMDb hiện tại đang được sử dụng bởi hàng triệu người dùng hàng tháng và với sự hỗ trợ của bộ API mạnh mẽ nó cũng được sử dụng bởi những thiết bị giải trí cá nhân như Kodi cho việc lấy dữ liệu về Phim ảnh, Poster và Fanart để làm tăng trải nghiệm của người sử dụng</description>
+    <description lang="zh_CN">themoviedb.org 是一个开放和自由的电影数据库。它完全由象你一样的用户来掌控。TMDb 每月为上百万用户提供服务，并通过强大的 API 界面为许多流行的媒体中心系统如 Kodi 提供电影资料、封面海报和同人画以丰富用户的体验。</description>
+    <description lang="zh_TW">themoviedb.org是一個免費和開放的電影資料庫。它是完全由與您一樣的廣大使用者來更新資訊。 TMDb目前擁有數以百萬計的使用人次並且有著強大的API，許多受歡迎的媒體中心平台像Kodi藉由TMDb獲取電影的數據資料庫，海報和影片資訊，以豐富使用者體驗。</description>
+  </extension>
+</addon>
+<addon id="skin.cpm.estuary.search" version="4.1.0" name="cpm.EstuarySearch" provider-name="phil65, Ichabod Fletchman,forbxy">
+	<requires>
+		<import addon="xbmc.gui" version="5.17.0"/>
+		<import addon="plugin.video.filteredmovies"/>
+	</requires>
+	<extension point="xbmc.gui.skin" debugging="false">
+		<res width="1920" height="1440" aspect="4:3" default="false" folder="xml" />
+		<res width="1920" height="1280" aspect="3:2" default="false" folder="xml" />
+		<res width="1920" height="1200" aspect="16:10" default="false" folder="xml" />
+		<res width="2040" height="1080" aspect="17:9" default="false" folder="xml" />
+		<res width="1920" height="1080" aspect="16:9" default="true" folder="xml" />
+		<res width="2560" height="1080" aspect="21:9" default="false" folder="xml" />
+		<res width="2338" height="1080" aspect="19.5:9" default="false" folder="xml" />
+		<res width="2160" height="1080" aspect="18:9" default="false" folder="xml" />
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<license>CC BY-SA 4.0, GNU GENERAL PUBLIC LICENSE Version 2.0</license>
+		<forum>http://forum.kodi.tv/</forum>
+		<source>https://github.com/xbmc/skin.estuary/</source>
+		<assets>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+			<screenshot>resources/screenshot-01.jpg</screenshot>
+			<screenshot>resources/screenshot-02.jpg</screenshot>
+			<screenshot>resources/screenshot-03.jpg</screenshot>
+			<screenshot>resources/screenshot-04.jpg</screenshot>
+			<screenshot>resources/screenshot-05.jpg</screenshot>
+			<screenshot>resources/screenshot-06.jpg</screenshot>
+			<screenshot>resources/screenshot-07.jpg</screenshot>
+			<screenshot>resources/screenshot-08.jpg</screenshot>
+		</assets>
+		<summary lang="en_GB">CPM Estuary Search - Modified from CPM&apos;s Estuary Mod (originally by phil65)</summary>
+		<summary lang="zh_CN">CPM Estuary Search - 基于CPM.Estuary修改</summary>
+		<description lang="en_GB">Modified Kodi skin based on CPM&apos;s Estuary (original Estuary by phil65, CPM enhancements by cpm-code).[CR][CR]Changes:[CR]- Quick filtering via magnifier button[CR]- Semi-transparent UI[CR]- Poster wall view with title display[CR]- OSD: independent audio track button with auto-popup[CR]- OSD: VS10 button alignment[CR]- Default font changed to Arial for Chinese support[CR]- Player Process Info DV/HDR page fully localized to Chinese (25 new strings)[CR]- Nit column right-aligned[CR]- AML hardware decode FPS label layout optimized[CR]- Fixed RPU/BL/EL indicator encoding corruption in Variables.xml</description>
+		<description lang="zh_CN">基于 CPM.Estuary修改(原作者 phil65,cpm-code)[CR]项目地址:github.com/forbxy[CR]改动项：[CR]- 绑定放大镜按钮快捷打开筛选页面[CR]- 可将电影海报设为皮肤常驻背景图[CR]- 界面整体半透明化[CR]- 海报墙视图显示影片名称[CR]- OSD 新增独立音轨按钮，聚焦自动弹窗[CR]- OSD VS10 按钮对齐[CR]- 默认字体改为 Arial，防止中文乱码[CR]- 播放器进程信息页 DV/HDR 全部中文翻译</description>
+		<disclaimer lang="en_GB">This is a modified skin based on CPM Estuary. Use at your own risk.</disclaimer>
+		<disclaimer lang="zh_CN">本皮肤基于 CPM Estuary 修改，使用风险自负。</disclaimer>
+	</extension>
+</addon>
+<addon id="repository.forbxy" name="kodi forbxy Add-on repository" version="1.2.0" provider-name="forbxy">
+    <extension point="xbmc.addon.repository" name="kodi forbxy Add-on repository">
+        <dir>
+            <info compressed="false">https://raw.githubusercontent.com/forbxy/repository.forbxy/master/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/forbxy/repository.forbxy/master/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/forbxy/repository.forbxy/master/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Forbxy's Kodi Add-on Repository</summary>
+        <description>A repository for custom Kodi add-ons.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.jpg</icon>
+        </assets>
+    </extension>
+</addon>
+<addon id="repository.forbxy" name="kodi forbxy Add-on repository" version="1.2.0" provider-name="forbxy">
+    <extension point="xbmc.addon.repository" name="kodi forbxy Add-on repository">
+        <dir>
+            <info compressed="false">https://raw.githubusercontent.com/forbxy/repository.forbxy/master/addons.xml</info>
+            <checksum>https://raw.githubusercontent.com/forbxy/repository.forbxy/master/addons.xml.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/forbxy/repository.forbxy/master/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Forbxy's Kodi Add-on Repository</summary>
+        <description>A repository for custom Kodi add-ons.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.jpg</icon>
+        </assets>
+    </extension>
+</addon>
+<addon id="repository.forbxy.ghproxy" name="kodi forbxy Add-on repository (GHProxy)" version="1.2.0" provider-name="forbxy">
+    <extension point="xbmc.addon.repository" name="kodi forbxy Add-on repository (GHProxy)">
+        <dir>
+            <info compressed="false">https://kodi8.com/addons.xml</info>
+            <checksum>https://kodi8.com/addons.xml.md5</checksum>
+            <datadir zip="true">https://gh-proxy.org/https://raw.githubusercontent.com/forbxy/repository.forbxy/master/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Forbxy's Kodi Add-on Repository</summary>
+        <description>A repository for custom Kodi add-ons.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.jpg</icon>
+        </assets>
+    </extension>
+</addon>
+</addons>
