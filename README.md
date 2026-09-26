@@ -27,6 +27,8 @@ Kodi-设置-插件-从库安装-Kodi Forbxy Addon Repository，即可浏览并�
   电影剧集筛选页面和一些常用功能的接口实现
 - [skin.cpm.estuary.search](https://github.com/forbxy/skin.cpm.estuary.search)  
   与筛选页搭配使用的官方 estuary 皮肤修改版
+- [script.aurora_6s_helper](https://github.com/forbxy/script.aurora_6s_helper)  
+  极光6s/4pro助手，修复wifi/蓝牙/led等，刷CE进emmc，修改启动第一屏图片
 - [vfs.stream.fast](https://github.com/forbxy/vfs.stream.fast)  
   Kodi WebDAV, HTTP VFS 实现，支持打开 ISO 文件
 - [plugin.service.emby-next-gen 12.3.7.2](https://github.com/forbxy/plugin.video.emby.vfs)  
