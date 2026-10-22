@@ -1,0 +1,59 @@
+name: Update Addons
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *' # Every hour at minute 17 (UTC and Beijing time)
+
+concurrency:
+  group: update-addons
+  cancel-in-progress: false
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Test repository generation
+        run: python -m unittest discover -s tests -v
+
+      - name: Run Update Script
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python update_repo.py
+
+      - name: Generate Repository Index
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          python generate_repo.py
+
+      - name: Commit and Push changes
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          expected_master=$(git rev-parse HEAD)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Switch to an orphan branch named 'latest_state'
+          git checkout --orphan latest_state
+          
+          # Add all files
+          git add -A
+          
+          # Commit current state
+          git commit -m "Auto-update addons (Clean History)"
+          
+          # Force push this orphan branch to 'master' on remote
+          # This effectively overwrites remote 'master' with a history-less commit
+          git push --force-with-lease="refs/heads/master:$expected_master" origin latest_state:master
