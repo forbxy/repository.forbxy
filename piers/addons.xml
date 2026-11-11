@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addons>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>android-aarch64</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-android-aarch64.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>android-armv7</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-android-armv7.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>linux-aarch64</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-linux-aarch64.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>linux-i686</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-linux-i686.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>linux-x86_64</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-linux-x86_64.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>osx-arm64</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-osx-arm64.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>osx-x86_64</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-osx-x86_64.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>windows-i686</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-windows-i686.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>windows-x86_64</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-windows-x86_64.zip</path></extension>
+</addon>
+<addon id="vfs.stream.fast" version="1.3.3" name="VFS Stream Fast" provider-name="forbxy">
+  <requires>
+    <import addon="kodi.binary.global.main" version="2.0.3" />
+    <import addon="kodi.binary.instance.vfs" version="3.0.1" />
+    <import addon="xbmc.addon" version="21.90.1" maxversion="22.90.0" />
+  </requires>
+  <extension point="kodi.vfs" files="true" directories="false" supportWrite="true" protocols="dav|davs|http|https" library_windows="vfs.stream.fast.dll" library_linux="libvfs.stream.fast.so" library_android="libvfs.stream.fast.so" library_osx="vfs.stream.fast.dylib" />
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">High-performance HTTP/WebDAV VFS implementation</summary>
+    <summary lang="zh_CN">高性能http/webdav vfs实现</summary>
+    <description lang="en_GB">Homepage: github.com/forbxy[CR]Features:[CR]1. LRU block cache: optimizes network ISO movie parsing, playback starts in seconds[CR]2. Read-ahead buffer: with default settings, 10s+ network fluctuations are imperceptible[CR]- For STRM usage, see STRM format requirements on the homepage vfs.stream.fast[CR]- For Emby integration, emby-next-gen requires a modified version, see homepage plugin.service.emby-next-gen</description>
+    <description lang="zh_CN">主页:github.com/forbxy[CR]特点:[CR]1.LRU块缓存：优化网络iso电影解析速度，起播只需数秒[CR]2.预读数据：默认参数下，10秒+的网络波动用户无感知[CR]-！如需使用strm，对STRM文件的格式要求见主页vfs.stram.fast[CR]-！如需接入emby，emby-next-gen只能使用修改版，具体见主页plugin.service.emby-next-gen</description>
+    <assets>
+      <icon>icon.png</icon>
+    </assets>
+  <platform>linux-armv7 linux</platform><path>vfs.stream.fast/vfs.stream.fast-1.3.3-Piers-linux-armv7.zip</path></extension>
+</addon>
+</addons>
