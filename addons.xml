@@ -111,7 +111,7 @@
         <platform>all</platform>
     </extension>
 </addon>
-<addon id="script.aurora_6s_helper" name="极光6S/4Pro助手" version="1.10.7" provider-name="forbxy">
+<addon id="script.aurora_6s_helper" name="极光6S/4Pro助手" version="1.10.8" provider-name="forbxy">
   <requires><import addon="xbmc.python" version="3.0.0"/></requires>
   <extension point="xbmc.python.script" library="default.py"><provides>executable</provides></extension>
   <extension point="xbmc.service" library="service.py"/>
